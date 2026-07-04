@@ -126,6 +126,8 @@ window.addEventListener('load', checkSiteAccess);
     </p>
 
     <div style="margin-bottom:20px !important; font-size:13px !important;">
+    <a href="https://dmamax.netlify.app/impressum" target="_blank" style="color:#58a6ff !important;">Impressum - https://dmamax.netlify.app/impressum</a> |
+        
         <a href="https://dmamax.netlify.app/impressum" target="_blank" style="color:#58a6ff !important;">Impressum</a> |
         <a href="https://dmamax.netlify.app/datenschutz" target="_blank" style="color:#58a6ff !important;">Datenschutz</a>
     </div>

@@ -5,8 +5,8 @@
  */
 
 (function() {
-  const PROJECT_URL = 'ВАШ_PROJECT_URL'; // Вставьте сюда свой URL
-  const ANON_KEY = 'ВАШ_ANON_KEY';       // Вставьте сюда свой Anon Key
+  const PROJECT_URL = 'https://wautmbihtasxbytvyohg.supabase.co'; // Вставьте сюда свой URL
+  const ANON_KEY = 'sb_publishable_5aDMn1ZsYfkAFzpu_RbyXQ_qPeHSN4s';       // Вставьте сюда свой Anon Key
 
   function init() {
     // Ждем, пока загрузится библиотека Supabase

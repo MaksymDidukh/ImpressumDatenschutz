@@ -1,33 +1,42 @@
-(function() {
-  // Подключаем Supabase библиотеку динамически, чтобы не добавлять её в HTML
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-  script.onload = function() {
-    const supabase = supabase.createClient(
-      'https://wautmbihtasxbytvyohg.supabase.co', 
-      'Sb_publishable_5aDMn1ZsYfkAFzpu_RbyXQ_qPeHSN4s'
-    );
+/**
+ * stats.js
+ * Подключается на все сайты. 
+ * Автоматически ждет загрузку библиотеки Supabase и отправляет данные.
+ */
 
-    async function trackEvent(eventType) {
+(function() {
+  const PROJECT_URL = 'ВАШ_PROJECT_URL'; // Вставьте сюда свой URL
+  const ANON_KEY = 'ВАШ_ANON_KEY';       // Вставьте сюда свой Anon Key
+
+  function init() {
+    // Ждем, пока загрузится библиотека Supabase
+    if (typeof supabase === 'undefined') {
+      setTimeout(init, 200);
+      return;
+    }
+
+    const client = supabase.createClient(PROJECT_URL, ANON_KEY);
+
+    // Делаем функцию доступной глобально на странице
+    window.trackEvent = async function(eventType) {
       try {
-        await supabase.from('password_logs').insert([{ 
-          event_type: eventType,
+        await client.from('password_logs').insert([{
           site_name: window.location.hostname,
+          event_type: eventType,
           created_at: new Date().toISOString()
         }]);
       } catch (err) {
-        console.error('Ошибка записи статистики:', err);
+        console.error('Ошибка логирования:', err);
       }
-    }
+    };
 
-    // Авто-трекинг посещения
-    trackEvent('page_view');
+    // Автоматическая фиксация посещения при загрузке страницы
+    window.trackEvent('page_view');
+  }
 
-    // Делаем функцию доступной глобально, если нужно вызвать по кнопке
-    window.trackPasswordAttempt = () => trackEvent('password_attempt');
-  };
-  document.head.appendChild(script);
+  init();
 })();
+
 
 /**
  * Функция проверяет пароль для доступа к сайту.

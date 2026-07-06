@@ -1,3 +1,34 @@
+(function() {
+  // Подключаем Supabase библиотеку динамически, чтобы не добавлять её в HTML
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  script.onload = function() {
+    const supabase = supabase.createClient(
+      'https://wautmbihtasxbytvyohg.supabase.co', 
+      'Sb_publishable_5aDMn1ZsYfkAFzpu_RbyXQ_qPeHSN4s'
+    );
+
+    async function trackEvent(eventType) {
+      try {
+        await supabase.from('password_logs').insert([{ 
+          event_type: eventType,
+          site_name: window.location.hostname,
+          created_at: new Date().toISOString()
+        }]);
+      } catch (err) {
+        console.error('Ошибка записи статистики:', err);
+      }
+    }
+
+    // Авто-трекинг посещения
+    trackEvent('page_view');
+
+    // Делаем функцию доступной глобально, если нужно вызвать по кнопке
+    window.trackPasswordAttempt = () => trackEvent('password_attempt');
+  };
+  document.head.appendChild(script);
+})();
+
 /**
  * Функция проверяет пароль для доступа к сайту.
  * Использует глобальный флаг для предотвращения повторных запусков.

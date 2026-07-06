@@ -1,41 +1,28 @@
-/**
- * stats.js
- * Подключается на все сайты. 
- * Автоматически ждет загрузку библиотеки Supabase и отправляет данные.
- */
-
+// stats.js
 (function() {
-  const PROJECT_URL = 'https://wautmbihtasxbytvyohg.supabase.co'; // Вставьте сюда свой URL
-  const ANON_KEY = 'sb_publishable_5aDMn1ZsYfkAFzpu_RbyXQ_qPeHSN4s';       // Вставьте сюда свой Anon Key
+  const URL = 'https://wautmbihtasxbytvyohg.supabase.co';
+  const KEY = 'sb_publishable_5aDMn1ZsYfkAFzpu_RbyXQ_qPeHSN4s';
 
   function init() {
-    // Ждем, пока загрузится библиотека Supabase
     if (typeof supabase === 'undefined') {
-      setTimeout(init, 200);
+      setTimeout(init, 500);
       return;
     }
+    const client = supabase.createClient(URL, KEY);
 
-    const client = supabase.createClient(PROJECT_URL, ANON_KEY);
-
-    // Делаем функцию доступной глобально на странице
     window.trackEvent = async function(eventType) {
-      try {
-        await client.from('password_logs').insert([{
-          site_name: window.location.hostname,
-          event_type: eventType,
-          created_at: new Date().toISOString()
-        }]);
-      } catch (err) {
-        console.error('Ошибка логирования:', err);
-      }
+      await client.from('password_logs').insert([{
+        site_name: window.location.hostname,
+        event_type: eventType,
+        created_at: new Date().toISOString()
+      }]);
     };
 
-    // Автоматическая фиксация посещения при загрузке страницы
     window.trackEvent('page_view');
   }
-
   init();
 })();
+
 
 
 /**

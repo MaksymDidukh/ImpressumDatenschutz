@@ -1,27 +1,4 @@
-// stats.js
-(function() {
-  const URL = 'https://wautmbihtasxbytvyohg.supabase.co';
-  const KEY = 'sb_publishable_5aDMn1ZsYfkAFzpu_RbyXQ_qPeHSN4s';
 
-  function init() {
-    if (typeof supabase === 'undefined') {
-      setTimeout(init, 500);
-      return;
-    }
-    const client = supabase.createClient(URL, KEY);
-
-    window.trackEvent = async function(eventType) {
-      await client.from('password_logs').insert([{
-        site_name: window.location.hostname,
-        event_type: eventType,
-        created_at: new Date().toISOString()
-      }]);
-    };
-
-    window.trackEvent('page_view');
-  }
-  init();
-})();
 
 
 

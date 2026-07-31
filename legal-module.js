@@ -34,7 +34,7 @@ function checkSiteAccess() {
 
 // Используем addEventListener вместо window.onload, 
 // чтобы не перезаписывать другие возможные обработчики загрузки
-window.addEventListener('load', checkSiteAccess);
+//!  window.addEventListener('load', checkSiteAccess);
 
 (function() {
     const projectName = document.title || "Maksym Didukh Project";

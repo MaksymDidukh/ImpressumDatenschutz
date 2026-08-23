@@ -93,10 +93,8 @@
 
     <div style="margin-bottom:20px !important; font-size:13px !important;">
         
-        <a href="https://dmamax.vercel.app/impressum" target="_blank" style="color:#58a6ff !important;">Impressum</a> |
-        <a href="https://dmamax.vercel.app/datenschutz" target="_blank" style="color:#58a6ff !important;">Datenschutz</a>
-        <a href="https://dmamax.netlify.app/impressum" target="_blank" style="color:#58a6ff !important;">Impressum</a> |
-        <a href="https://dmamax.netlify.app/datenschutz" target="_blank" style="color:#58a6ff !important;">Datenschutz</a>
+        <a href="https://dmamax.vercel.app/impressum.html" target="_blank" style="color:#58a6ff !important;">Impressum</a> |
+        <a href="https://dmamax.vercel.app/datenschutz.html" target="_blank" style="color:#58a6ff !important;">Datenschutz</a>
     </div>
 
     <div style="text-align:left !important; background:#0d1117 !important; padding:15px !important; border-radius:8px !important; border-left:4px solid #58a6ff !important; font-size:12.5px !important; line-height:1.6 !important; color:#c9d1d9 !important; margin-bottom:20px !important;">
@@ -140,8 +138,8 @@
         footer.className = 'dm-universal-footer';
         footer.innerHTML = `
             &copy; 2026 Maksym Didukh | Contact: ${contactEmail} | Project: <b>${projectName}</b> | 
-            <a href="https://dmamax.vercel.app/impressum" target="_blank">Impressum</a> | 
-            <a href="https://dmamax.vercel.app/datenschutz" target="_blank">Datenschutz</a>
+            <a href="https://dmamax.vercel.app/impressum.html" target="_blank">Impressum</a> | 
+            <a href="https://dmamax.vercel.app/datenschutz.html" target="_blank">Datenschutz</a>
         `;
         document.documentElement.appendChild(footer);
     }

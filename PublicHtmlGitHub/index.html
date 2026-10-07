@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Public Pages Explorer</title>
+  <!-- Favicon приложения -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'><path d='M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .window-shadow { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 h-screen flex flex-col font-sans overflow-hidden">
+
+  <!-- Top Header Bar -->
+  <header class="bg-gray-800 border-b border-gray-700 px-4 py-3 flex items-center justify-between shrink-0">
+    <div class="flex items-center space-x-3">
+      <!-- Logo Icon -->
+      <div class="p-1.5 bg-blue-600/20 rounded-lg border border-blue-500/30 flex items-center justify-center">
+        <svg class="w-6 h-6 text-blue-400 fill-current" viewBox="0 0 24 24">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </div>
+      <h1 class="font-bold text-lg tracking-tight">Public Index.html Explorer</h1>
+    </div>
+
+    <!-- User Input Section -->
+    <div class="flex items-center space-x-2">
+      <input id="userInput" type="text" value="https://github.com/MaksymDidukh/" placeholder="Никнейм или ссылка (например, octocat)" 
+             class="bg-gray-700 text-sm px-3 py-1.5 rounded border border-gray-600 focus:outline-none focus:border-blue-500 w-72">
+      <button onclick="startScanning()" 
+              class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-1.5 rounded transition flex items-center space-x-1.5">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+        </svg>
+        <span>Сканировать</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="flex flex-1 overflow-hidden">
+    
+    <!-- Left Sidebar: Repositories List -->
+    <aside class="w-80 bg-gray-800/50 border-r border-gray-700 flex flex-col shrink-0">
+      <div id="status" class="p-3 text-xs border-b border-gray-700 text-gray-400 flex items-center space-x-2">
+        <span>Введите имя пользователя GitHub или вставьте ссылку на его профиль.</span>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-2">
+        <div class="flex items-center justify-between px-2 py-1 text-xs font-bold uppercase tracking-wider text-green-400">
+          <span>Найдено публичных (<span id="pubCount">0</span>)</span>
+        </div>
+        <div id="publicList" class="space-y-1 mt-2"></div>
+      </div>
+    </aside>
+
+    <!-- Right Workspace: Windows Area -->
+    <main id="workspace" class="flex-1 bg-gray-950 p-4 relative overflow-hidden flex flex-wrap content-start gap-4 overflow-y-auto">
+      <div id="emptyNotice" class="absolute inset-0 flex flex-col items-center justify-center text-gray-600 pointer-events-none space-y-2">
+        <svg class="w-12 h-12 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        <span>Выберите найденный репозиторий из списка слева, чтобы открыть его в окне</span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let windowCount = 0;
+
+    function extractUsername(input) {
+      let trimmed = input.trim();
+      if (!trimmed) return null;
+      if (trimmed.includes('github.com/')) {
+        const parts = trimmed.split('github.com/')[1].split('/');
+        return parts[0];
+      }
+      return trimmed;
+    }
+
+    async function startScanning() {
+      const rawInput = document.getElementById('userInput').value;
+      const username = extractUsername(rawInput);
+
+      if (!username) return alert('Введите корректное имя пользователя!');
+
+      updateStatus(`Загрузка публичных репозиториев пользователя: ${username}...`);
+      
+      try {
+        const repos = await fetchPublicRepos(username);
+        if (repos.length === 0) {
+          updateStatus(`У пользователя ${username} не найдено публичных репозиториев.`, true);
+          return;
+        }
+        updateStatus(`Найдено ${repos.length} репозиториев. Проверяем наличие index.html...`);
+        await scanReposForIndex(username, repos);
+      } catch (err) {
+        updateStatus('Ошибка: ' + err.message, true);
+      }
+    }
+
+    function updateStatus(msg, isError = false, avatarUrl = null) {
+      const el = document.getElementById('status');
+      const avatarHtml = avatarUrl 
+        ? `<img src="${avatarUrl}" class="w-6 h-6 rounded-full border border-gray-600 shrink-0">` 
+        : '';
+      
+      el.innerHTML = `
+        ${avatarHtml}
+        <span class="${isError ? 'text-red-400' : 'text-gray-300'}">${msg}</span>
+      `;
+    }
+
+    async function fetchPublicRepos(username) {
+      let repos = [];
+      let page = 1;
+      while (true) {
+        const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&page=${page}`);
+        if (!res.ok) {
+          if (res.status === 404) throw new Error('Пользователь не найден');
+          if (res.status === 403) throw new Error('Превышен лимит запросов GitHub API (попробуйте позже)');
+          throw new Error(`Ошибка API: ${res.statusText}`);
+        }
+        const data = await res.json();
+        if (data.length === 0) break;
+        repos = repos.concat(data);
+        page++;
+      }
+      return repos;
+    }
+
+    async function scanReposForIndex(username, repos) {
+      const publicList = document.getElementById('publicList');
+      publicList.innerHTML = '';
+      let pubC = 0;
+      document.getElementById('pubCount').textContent = '0';
+
+      const avatarUrl = repos[0]?.owner?.avatar_url;
+
+      for (let i = 0; i < repos.length; i++) {
+        const repo = repos[i];
+        updateStatus(`Проверка [${i + 1}/${repos.length}]: ${repo.name}`, false, avatarUrl);
+
+        const hasIndex = await checkIndexHtml(username, repo.name, repo.default_branch);
+        
+        if (hasIndex) {
+          const item = createRepoItem(repo);
+          publicList.appendChild(item);
+          pubC++;
+          document.getElementById('pubCount').textContent = pubC;
+        }
+      }
+      updateStatus(`Готово! Найдено сайтов с index.html: ${pubC}`, false, avatarUrl);
+    }
+
+    async function checkIndexHtml(owner, repo, branch) {
+      try {
+        const res = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/index.html`, { method: 'HEAD' });
+        if (res.ok) return true;
+        
+        const resHtm = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/index.htm`, { method: 'HEAD' });
+        return resHtm.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    function createRepoItem(repo) {
+      const div = document.createElement('div');
+      div.className = 'p-2.5 bg-gray-700/40 hover:bg-gray-700 rounded cursor-pointer transition flex items-center space-x-2.5 text-xs border border-gray-700/50 group';
+      
+      div.innerHTML = `
+        <img src="${repo.owner.avatar_url}" class="w-7 h-7 rounded border border-gray-600 shrink-0 group-hover:border-blue-400 transition">
+        <div class="flex flex-col min-w-0 flex-1">
+          <div class="font-semibold text-blue-400 truncate group-hover:text-blue-300">${repo.name}</div>
+          <div class="text-gray-400 text-[10px] truncate mt-0.5 flex items-center space-x-1">
+            <span>${repo.owner.login}</span>
+            <span>•</span>
+            <span class="text-gray-500">${repo.default_branch}</span>
+          </div>
+        </div>
+      `;
+      div.onclick = () => openWindow(repo);
+      return div;
+    }
+
+    function openWindow(repo) {
+      document.getElementById('emptyNotice').classList.add('hidden');
+      windowCount++;
+
+      const win = document.createElement('div');
+      win.className = 'w-[650px] h-[480px] bg-gray-800 border border-gray-700 rounded-lg flex flex-col window-shadow overflow-hidden resize min-w-[320px] min-h-[220px]';
+      
+      const winId = `win-${windowCount}`;
+      win.id = winId;
+
+      const renderUrl = `https://raw.githack.com/${repo.owner.login}/${repo.name}/${repo.default_branch}/index.html`;
+      const pagesUrl = `https://${repo.owner.login}.github.io/${repo.name}/`;
+
+      win.innerHTML = `
+        <!-- Window Header -->
+        <div class="bg-gray-900 px-3 py-2 border-b border-gray-700 flex items-center justify-between select-none">
+          <div class="flex items-center space-x-2 truncate">
+            <img src="${repo.owner.avatar_url}" class="w-4 h-4 rounded-full border border-gray-600">
+            <span class="text-xs font-bold text-gray-200 truncate">${repo.full_name}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <a href="${pagesUrl}" target="_blank" title="Открыть GitHub Pages в новой вкладке" class="text-xs text-blue-400 hover:underline flex items-center space-x-1">
+              <span>Pages</span>
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
+                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/>
+              </svg>
+            </a>
+            <button onclick="document.getElementById('${winId}').remove()" 
+                    class="text-gray-400 hover:text-red-400 text-sm font-bold px-1.5 py-0.5 rounded">✕</button>
+          </div>
+        </div>
+        <!-- Iframe Container -->
+        <div class="flex-1 bg-white relative">
+          <iframe src="${renderUrl}" class="w-full h-full border-0 relative z-10" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+        </div>
+      `;
+
+      document.getElementById('workspace').appendChild(win);
+    }
+  </script>
+    <script src="https://dmamax.vercel.app/legal-module.js"></script>
+
+</body>
+</html>
